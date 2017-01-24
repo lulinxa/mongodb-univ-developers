@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title My Blog
+  %body
+    - unless username.nil?
+      = "Welcome #{username}"
+      %a{:href => "/logout"} Logout
+      |
+      %a{:href => "/newpost"} New Post
+      %p
+    %h1 My Blog
+    This is a placeholder for the blog

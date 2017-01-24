@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'mongo'
 require 'pry'
 require 'pry-nav'
 
@@ -31,20 +32,20 @@ class SessionDAO
 
   # will send a new user session by deleting from sessions table
   def end_sessions(session_id)
-    session_id ? sessions.find(_id: session_id).remove : nil
+    session_id ? @sessions.find(_id: session_id).remove : nil
   end
 
   # if there is a valid session, it is returned
   def get_session(session_id)
-    binding.pry
-    session_id ? sessions.find(_id: session_id) : nil
+    # binding.pry
+    session_id ? @sessions.find(_id: session_id) : nil
   end
 
   # get the username of the current session, or None if the session is not valid
   def get_username(session_id)
-    binding.pry
+    # binding.pry
     session = get_session(session_id)
-    session ? session[:username] : nil
+    session ? session.find(session_id: session_id).first[:username] : nil
   end
 
   def get_random_str(num_chars)
