@@ -1,4 +1,6 @@
 require 'securerandom'
+require 'pry'
+require 'pry-nav'
 
 # The session Data Access Object handles
 # interactions with the sessions collection
@@ -7,7 +9,7 @@ class SessionDAO
 
   def initialize(database)
     @db = database
-    @sessions = database.sessions
+    @sessions = database[:sessions]
   end
 
   # will start a new session id by adding a
@@ -18,7 +20,7 @@ class SessionDAO
     session = { username: username, _id: session_id }
 
     begin
-      @sessions.insert(session)
+      @sessions.insert_one(session)
     rescue
       p 'Unexpected error on start_session'
       return nil
@@ -34,11 +36,13 @@ class SessionDAO
 
   # if there is a valid session, it is returned
   def get_session(session_id)
+    binding.pry
     session_id ? sessions.find(_id: session_id) : nil
   end
 
   # get the username of the current session, or None if the session is not valid
   def get_username(session_id)
+    binding.pry
     session = get_session(session_id)
     session ? session[:username] : nil
   end

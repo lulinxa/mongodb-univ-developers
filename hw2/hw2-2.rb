@@ -1,4 +1,5 @@
 require 'mongo'
+require 'pry'
 
 client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'students')
 collection = client[:grades]
@@ -13,6 +14,7 @@ for doc in cursor
   if student_id != prev_id
     prev_id = student_id
     p "Remove #{doc[:_id]}"
-    doc.delete
+    # binding.pry
+    collection.find(_id: BSON::ObjectId("#{doc[:_id]}")).find_one_and_delete
   end
 end

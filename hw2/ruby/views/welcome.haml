@@ -1,0 +1,18 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title Welcome
+    :css
+      .label {text-align: right}
+      .error {color: red}
+  %body
+    = "Welcome #{@username}"
+    %p
+    %ul
+      %li
+        %a{:href => "/"} Goto Blog Home
+      %li
+        %a{:href => "/logout"} Logout
+      %li
+        %a{:href => "/newpost"} Create a New Post

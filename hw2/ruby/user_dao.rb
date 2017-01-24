@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'bcrypt'
 
 # user dao class
 class UserDAO
@@ -6,19 +7,70 @@ class UserDAO
 
   def initialize(db)
     @db = db
-    @users = db.users
+    @users = db[:users]
     @secret = 'verysecret'
   end
 
   def make_salt
-    SecureRancom.hex(3)[1..5]
+    SecureRandom.hex(3)
   end
 
   # implement the function make_pw_hash(name, pw) that returns a hashed password
   # of the format:
   # HASH(pw + salt),salt
-  # use sha256
-  def make_pw_hash(salt = nil)
-    salt ? salt : make_salt
+  # using bcrypt
+  def make_pw_hash(pw, salt = nil)
+    unless salt
+      salt = make_salt
+    end
+    BCrypt::Password.create(pw + salt) + "," + salt
+  end
+
+  # Validates a user login. Returns user record or nil
+  def validate_login(username, password)
+    user = nil
+    begin
+      user = @users.find_one({'_id':username})
+      # you will need to retrieve right document from the users collection.
+      p "This space intentionally left blank."
+    rescue
+      p "Unable to query database for user"
+    end
+
+    if user == nil
+      p "User not in database"
+      return nil
+    end
+
+    salt = user['password'].split(',')[1]
+
+    if user['password'] != make_pw_hash(password, salt)
+      p "user password is not a match"
+      return nil
+    end
+    # Looks good
+    user
+  end
+
+  # creates a new user in the users collection
+  def add_user(username, password, email)
+    password_hash = make_pw_hash(password)
+
+    user = {'_id': username, 'password': password_hash}
+    if email != ""
+      user['email'] = email
+    end
+
+    begin
+      @users.insert_one(user)
+      # You need to insert the user into the users collection.
+      # Don't over think this one, it's a straight forward insert.
+      p "This space intentionally left blank."
+    rescue
+      p "Error MongoDB"
+      return nil
+    end
+
+    true
   end
 end

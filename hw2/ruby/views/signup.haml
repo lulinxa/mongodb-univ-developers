@@ -1,0 +1,40 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title Sign Up
+    :css
+      .label {text-align: right}
+      .error {color: red}
+  %body
+    Already a user?
+    %a{:href => "/login"} Login
+    %p
+    %h2 Signup
+    %form{:method => "post"}
+      %table
+        %tr
+          %td.label
+            Username
+          %td
+            %input{:name => "username", :type => "text", :value => "#{username}"}/
+          %td.error= "#{username_error}"
+        %tr
+          %td.label
+            Password
+          %td
+            %input{:name => "password", :type => "password", :value => ""}/
+          %td.error= "#{password_error}"
+        %tr
+          %td.label
+            Verify Password
+          %td
+            %input{:name => "verify", :type => "password", :value => ""}/
+          %td.error= "#{verify_error}"
+        %tr
+          %td.label
+            Email (optional)
+          %td
+            %input{:name => "email", :type => "text", :value => "#{email}"}/
+          %td.error= "#{email_error}"
+      %input{:type => "submit"}/
